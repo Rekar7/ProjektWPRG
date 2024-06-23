@@ -6,27 +6,19 @@ include("../scripts/functions.php");
 $GLOBALS["config"] = $config;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = $_POST['name'];
+    $lastName = $_POST['lastName'];
+    $phoneNumber = $_POST['phoneNumber'];
+    $address = $_POST['address'];
     $password = $_POST['password'];
     $email = $_POST['email'];
 
-    if (!empty($email) && !empty($password)) {
+    if (!empty($name) && !empty($lastName) && !empty($email) && !empty($password)) {
         $conn = connect_to_db($config);
-        $query = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-        $result = mysqli_query($conn, $query);
-        if ($result) {
-            if (($result) && ($result->num_rows > 0)) {
-                $userData = mysqli_fetch_assoc($result);
-
-                if ($userData['password'] === $password) {
-                    $_SESSION['user_id'] = $userData['user_id'];
-                    $_SESSION['role_id'] = $userData['role_id'];
-                    $conn->close();
-                    header("Location: ../index.php");
-                    die;
-                }
-            }
-        }
+        $query = "INSERT INTO users (name, last_name, phone_number, address, password,  email, role_id) VALUES ('$name', '$lastName', '$phoneNumber', '$address', '$password', '$email', 1)";
+        mysqli_query($conn, $query);
         $conn->close();
+        header("Location: login.php");
         die;
     } else {
         echo "All fields are required";
@@ -73,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="#">Zaloguj się</a>
+                    <a class="nav-link text-light" href="../pages/login.php">Zaloguj się</a>
                 </li>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="post">
@@ -89,23 +81,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="container-fluid text-light p-5" id="main-page">
     <div class="row text-center p-1">
-        <h1>Zaloguj się</h1>
+        <h1>Zarejestruj się</h1>
     </div>
 
     <div class="row text-center justify-content-center">
-
         <form action="#" method="POST" class="was-validated text-center w-50 mt-5">
+
+            <!-- Name -->
+
+            <div class="col">
+                <label class="mt-3" for="name">Imię</label>
+                <input name="name" type="text" class="form-control" placeholder="Imię" required>
+            </div>
+
+            <!-- Lastname -->
+
+            <div class="col">
+                <label class="mt-3" for="lastName">Nazwisko</label>
+                <input name="lastName" type="text" class="form-control" placeholder="Nazwisko" required>
+            </div>
 
             <!-- Email -->
 
             <div class="col">
-                <label class="mt-3" for="emal">Email</label>
+                <label class="mt-3" for="email">Email</label>
                 <input name="email" type="email" class="form-control" placeholder="Email reprezentanta" required>
             </div>
 
+            <!-- Adres -->
+
+            <div class="form-group mt-3">
+                <label for="address">Adres zamieszkania</label>
+                <input name="address" type="text" class="form-control " placeholder="Adres zamieszkania" required>
+            </div>
+
+            <!-- Telefon -->
+
+            <div class="form-group mt-3">
+                <label for="phoneNumber">Numer telefonu</label>
+                <input name="phoneNumber" type="text" class="form-control " placeholder="Numer telefonu" required>
+            </div>
             <!-- Hasło -->
 
-            <div class="col mt-3">
+            <div class="form-group mt-3">
                 <label for="password">Hasło</label>
                 <input name="password" type="password" class="form-control " placeholder="Hasło" required>
             </div>
@@ -116,9 +134,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 
-    <div class="row text-center justify-content-center mt-5">
-        Nie masz konta? Zarejestruj się <a href="../pages/register.php">tu!</a>
-    </div>
 
 </div>
 
