@@ -1,3 +1,13 @@
+<?php
+session_start();
+include("../database/connection.php");
+include("../scripts/functions.php");
+
+$GLOBALS["config"] = $config;
+$conn = connect_to_db($config);
+checkLogin($conn);
+?>
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -36,15 +46,14 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/login.php">Zaloguj się</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/admin.php">Panel Administracyjny</a>
-                </li>
+                <?php
+                showLoginProfile();
+                showAdminPanel();
+                ?>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="post">
-                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu" aria-label="Search">
+                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
+                       aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
             </form>
         </div>
@@ -53,8 +62,51 @@
 
 <!--   CONTENT    -->
 
+<div class="container mt-5">
+    <!-- **Tutaj może znajdować się zawartość strony, np. produkty sklepu** -->
+    <div class="flex-container">
 
+        <div class="flex-container-vertical sidebars me-2 bg-dark-subtle">
 
+            <?php
+
+            foreach (Category::cases() as $category) {
+                echo '<div class="border border-dark border-3 p-1 text-dark">'. $category->value .'</div>';
+            }
+
+            ?>
+        </div>
+        <div class="grid-container bg-success w-75">
+            <?php
+
+            $products = (object) array();
+            $conn = connect_to_db($config);
+            $products = loadProducts($conn);
+
+            foreach ($products as $product) {
+                $product->showProduct();
+            }
+
+            ?>
+        </div>
+        <div class="flex-container-vertical sidebars ms-2 bg-dark-subtle">
+            <div class="border border-dark border-3 p-1 text-dark"><H5>Sortowanie</H5></div>
+        </div>
+
+    </div>
+
+    <!-- **Paginacja**
+    <nav aria-label="Page navigation example" class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link text-dark" href="#">Poprzednia</a></li>
+            <li class="page-item"><a class="page-link text-dark" href="#">1</a></li>
+            <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+            <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+            <li class="page-item"><a class="page-link text-dark" href="#">Następna</a></li>
+        </ul>
+    </nav>
+</div>
+-->
 <!--   FOOTER    -->
 
 <footer class="mt-5">

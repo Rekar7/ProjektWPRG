@@ -1,3 +1,13 @@
+<?php
+session_start();
+include("database/connection.php");
+include("scripts/functions.php");
+
+$GLOBALS["config"] = $config;
+$conn = connect_to_db($config);
+checkLogin($conn);
+?>
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -36,15 +46,29 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" href="pages/cart.php">Koszyk</a>
                 </li>
-                <li class="nav-item">
+                <?php
+                if (isset($_SESSION['user_id'])) {
+                    echo '<li class="nav-item">
+                    <a class="nav-link text-light" href="pages/profile.php">Profil</a>
+                </li>';
+                }
+                else{
+                    echo '<li class="nav-item">
                     <a class="nav-link text-light" href="pages/login.php">Zaloguj się</a>
-                </li>
-                <li class="nav-item">
+                </li>';
+                }
+
+                if(isset($_SESSION['role_id'])){
+                    if($_SESSION['role_id'] > 1){echo '<li class="nav-item">
                     <a class="nav-link text-light" href="pages/admin.php">Panel Administracyjny</a>
-                </li>
+                </li>';}
+
+                }
+                ?>
             </ul>
             <form class="d-flex" role="search" action="pages/shop.php" method="post">
-                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu" aria-label="Search">
+                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
+                       aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
             </form>
         </div>
@@ -63,9 +87,7 @@
     </div>
 
 
-</div>
-
-<!--   FOOTER    -->
+</div><!--   FOOTER    -->
 
 <footer class="mt-5">
 

@@ -1,3 +1,13 @@
+<?php
+session_start();
+include("../database/connection.php");
+include("../scripts/functions.php");
+
+$GLOBALS["config"] = $config;
+$conn = connect_to_db($config);
+checkLogin($conn);
+?>
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -39,12 +49,13 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" href="#">Profil</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/admin.php">Panel Administracyjny</a>
-                </li>
+                <?php
+                showAdminPanel();
+                ?>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="post">
-                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu" aria-label="Search">
+                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
+                       aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
             </form>
         </div>
@@ -52,7 +63,6 @@
 </nav>
 
 <!--   CONTENT    -->
-
 
 
 <!--   FOOTER    -->

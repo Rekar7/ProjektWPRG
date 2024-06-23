@@ -1,3 +1,13 @@
+<?php
+session_start();
+include("../database/connection.php");
+include("../scripts/functions.php");
+
+$GLOBALS["config"] = $config;
+$conn = connect_to_db($config);
+checkLogin($conn);
+?>
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -36,12 +46,10 @@
                 <li class="nav-item">
                     <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/login.php">Zaloguj się</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/admin.php">Panel Administracyjny</a>
-                </li>
+                <?php
+                showLoginProfile();
+                showAdminPanel();
+                ?>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="post">
                 <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"

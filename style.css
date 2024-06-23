@@ -10,8 +10,38 @@
     -webkit-text-fill-color: transparent;
 }
 
+.shopItem{
+
+}
+
+img{
+    max-width: 50%;
+    height: auto;
+}
+
 .AboutUsHeader{
     color: #6f42c1;
+}
+
+.grid-container {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: auto auto auto auto;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+}
+
+.flex-container-vertical {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebars{
+    min-width: 100px;
+    width: 15%;
 }
 
 #MeblexText{
