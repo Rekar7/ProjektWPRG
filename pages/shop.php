@@ -6,8 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sklep</title>
-    <link href="bootstrap-5.3.3-dist/css/bootstrap.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <link href="../bootstrap-5.3.3-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../style.css" rel="stylesheet">
 </head>
 <body class="bg-black text-light">
 
@@ -24,26 +24,26 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active text-light" aria-current="page" href="#">Strona główna</a>
+                    <a class="nav-link text-light" aria-current="page" href="../index.php">Strona główna</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="pages/about.php">O nas</a>
+                    <a class="nav-link text-light" href="../pages/about.php">O nas</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="pages/shop.php">Sklep</a>
+                    <a class="nav-link text-light" href="#">Sklep</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="pages/cart.php">Koszyk</a>
+                    <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="pages/login.php">Zaloguj się</a>
+                    <a class="nav-link text-light" href="../pages/login.php">Zaloguj się</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="pages/admin.php">Panel Administracyjny</a>
+                    <a class="nav-link text-light" href="../pages/admin.php">Panel Administracyjny</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search" action="pages/shop.php" method="post">
+            <form class="d-flex" role="search" action="../pages/shop.php" method="post">
                 <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu" aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
             </form>
@@ -53,17 +53,7 @@
 
 <!--   CONTENT    -->
 
-<div class="container-fluid bg-black text-light" id="MeblexText">
-    <div class="row text-left ms-1 display-1 gradient-text">
-        <strong> MEBLEX</strong>
-    </div>
-    <div class="row text-left ms-3 display-5 secondary-gradient-text">
-        Lider nr. 1 branży meblowej<br>
-        w Sianowie.
-    </div>
 
-
-</div>
 
 <!--   FOOTER    -->
 
@@ -78,6 +68,6 @@
 
 </footer>
 
-<script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
 </body>
 </html>

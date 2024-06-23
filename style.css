@@ -1,0 +1,35 @@
+.gradient-text {
+    background: linear-gradient(to right, #DD0000, #DD6666);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.secondary-gradient-text {
+    background: linear-gradient(to right, #DD6666, #DDDDDD);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.AboutUsHeader{
+    color: #6f42c1;
+}
+
+#MeblexText{
+    margin-top: 15%;
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 2.5rem;            /* Footer height */
+}
+
+#page-container {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content-wrap {
+    padding-bottom: 2.5rem;    /* Footer height */
+}
