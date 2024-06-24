@@ -7,22 +7,18 @@ $config = $GLOBALS["config"];
 
 if (($_SERVER["REQUEST_METHOD"] == "POST") && (isset($_SESSION['user_id'])) && ($_SESSION['role_id']) > 2) {
     $email = "";
-    $emailAdmin = "";
-    if (isset($_POST['email'])) {
+    $akcja="";
+    if (isset($_POST['email'])&&isset($_POST['akcja'])) {
         $email = $_POST['email'];
+        $akcja = $_POST['akcja'];
     }
 
-    if (isset($_POST['emailAdmin'])) {
-        $emailAdmin = $_POST['emailAdmin'];
-    }
-
-
-    if (!empty($emailAdminl)) {
+    if (!empty($email)&&$akcja=="admin") {
         try {
             $conn = connect_to_db($config);
             $query = "UPDATE users
         SET role_id = 3
-        WHERE email = '" . $emailAdmin . "';";
+        WHERE email = '" . $email . "';";
             mysqli_query($conn, $query);
             $conn->close();
         } catch (Exception $e) {
@@ -30,7 +26,7 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (isset($_SESSION['user_id'])) && (
         }
     }
 
-    if (!empty($email)) {
+    if (!empty($email)&&$akcja=="delete") {
         try {
             $conn = connect_to_db($config);
             $query = "DELETE FROM users WHERE email = '" . $email . "';";
@@ -116,24 +112,19 @@ if (($_SERVER["REQUEST_METHOD"] == "POST") && (isset($_SESSION['user_id'])) && (
 
             <div class="col">
                 <label class="mt-3" for="name">email</label>
-                <input name="email" type="email" class="form-control" placeholder="Email">
+                <input name="email" type="email" class="form-control" placeholder="Email" required>
             </div>
 
             <div class="row text-center p-1">
-                <h1>Nadaj admina</h1>
+                <h1>Wybierz akcje</h1>
             </div>
 
             <div class="row text-center justify-content-center mt-5">
-
-                <!-- Name -->
-
-                <div class="col">
-                    <label class="mt-3" for="emailAdmin">email</label>
-                    <input name="emailAdmin" type="email" class="form-control" placeholder="Email">
-                </div>
-
-                <input type="submit" class="btn btn-lg btn-block btn-primary mt-5" value="Wyślij formularz"></input>
-
+                <select name="akcja">
+                    <option value="admin">Nadaj admina</option>
+                    <option value="delete">Usuń konto</option>
+                </select>
+            </div>
         </form>
     </div>
 </div>
