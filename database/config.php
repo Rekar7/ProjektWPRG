@@ -1,9 +1,9 @@
 <?php
 //$config = array(
-//    'server' => 'szuflandia.pjwskt.edu.pl',
+//    'server' => 'szuflandia.pjwstk.edu.pl',
 //    'database' => 's30401',
 //    'login' => 's30401',
-//    'password' => 'Woj.Binc',
+//    'password' => 'Woj.Binc'
 //);
 $config = array(
     'server' => 'localhost',

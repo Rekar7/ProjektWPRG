@@ -3,7 +3,7 @@ session_start();
 include("../database/connection.php");
 include("../scripts/functions.php");
 
-$GLOBALS["config"] = $config;
+$config = $GLOBALS["config"];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <a class="nav-link text-light" href="#">Zaloguj się</a>
                 </li>
             </ul>
-            <form class="d-flex" role="search" action="../pages/shop.php" method="post">
+            <form class="d-flex" role="search" action="../pages/shop.php" method="get">
                 <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
                        aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>

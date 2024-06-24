@@ -44,17 +44,13 @@ checkLogin($conn);
                     <a class="nav-link text-light" href="../pages/shop.php">Sklep</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="../pages/profile.php">Profil</a>
+                    <a class="nav-link text-light" href="#">Koszyk</a>
                 </li>
                 <?php
+                showLoginProfile();
                 showLogout();
+                showAdminPanel();
                 ?>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="#">Panel Administracyjny</a>
-                </li>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="get">
                 <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
@@ -66,7 +62,11 @@ checkLogin($conn);
 </nav>
 
 <!--   CONTENT    -->
-
+<div class="flex-container mt-5">
+    <?php
+    showProductDetail();
+    ?>
+</div>
 
 <!--   FOOTER    -->
 

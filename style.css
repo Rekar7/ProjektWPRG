@@ -19,6 +19,11 @@ img{
     height: auto;
 }
 
+#productImage{
+    max-width: 100%;
+    height: auto;
+}
+
 .AboutUsHeader{
     color: #6f42c1;
 }

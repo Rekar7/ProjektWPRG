@@ -3,7 +3,7 @@ session_start();
 include("../database/connection.php");
 include("../scripts/functions.php");
 
-$GLOBALS["config"] = $config;
+$config = $GLOBALS["config"];
 $conn = connect_to_db($config);
 checkLogin($conn);
 ?>
@@ -48,6 +48,7 @@ checkLogin($conn);
                 </li>
                 <?php
                 showLoginProfile();
+                showLogout();
                 showAdminPanel();
                 ?>
             </ul>
@@ -82,8 +83,20 @@ checkLogin($conn);
 
             $products = (object)array();
             $conn = connect_to_db($config);
-            $products = loadProducts($conn);
-
+            if (isset($_POST['search'])) {
+                $query = "
+                SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+                FROM products p
+                JOIN categories c ON p.category_id = c.category_id
+                WHERE p.product_name LIKE '%" . $_POST['search'] . "%'";
+                $products = loadProducts($conn,$query);
+            } else {
+                $query = "
+                SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+                FROM products p
+                JOIN categories c ON p.category_id = c.category_id";
+                $products = loadProducts($conn,$query);
+            }
             if (isset($_GET["category"])) {
                 foreach ($products as $product) {
                     if ($product->category == $_GET['category']) $product->showProduct();
@@ -151,18 +164,6 @@ checkLogin($conn);
 
     </div>
 
-    <!-- **Paginacja**
-    <nav aria-label="Page navigation example" class="mt-5">
-        <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link text-dark" href="#">Poprzednia</a></li>
-            <li class="page-item"><a class="page-link text-dark" href="#">1</a></li>
-            <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
-            <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
-            <li class="page-item"><a class="page-link text-dark" href="#">Następna</a></li>
-        </ul>
-    </nav>
-</div>
--->
     <!--   FOOTER    -->
 
     <footer class="mt-5">

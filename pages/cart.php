@@ -3,7 +3,7 @@ session_start();
 include("../database/connection.php");
 include("../scripts/functions.php");
 
-$GLOBALS["config"] = $config;
+$config = $GLOBALS["config"];
 $conn = connect_to_db($config);
 checkLogin($conn);
 ?>
@@ -48,10 +48,11 @@ checkLogin($conn);
                 </li>
                 <?php
                 showLoginProfile();
+                showLogout();
                 showAdminPanel();
                 ?>
             </ul>
-            <form class="d-flex" role="search" action="../pages/shop.php" method="post">
+            <form class="d-flex" role="search" action="../pages/shop.php" method="get">
                 <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
                        aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
