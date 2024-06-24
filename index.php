@@ -5,7 +5,7 @@ include("scripts/functions.php");
 
 $config = $GLOBALS["config"];
 $conn = connect_to_db($config);
-checkLogin($conn);
+$user = checkLogin($conn);
 ?>
 
 <!doctype html>
@@ -54,17 +54,18 @@ checkLogin($conn);
                     echo '<li class="nav-item">
                     <a class="nav-link text-light" href="../pages/logout.php">Wyloguj</a>
                 </li>';
-                }
-                else{
+                } else {
                     echo '<li class="nav-item">
                     <a class="nav-link text-light" href="pages/login.php">Zaloguj się</a>
                 </li>';
                 }
 
-                if(isset($_SESSION['role_id'])){
-                    if($_SESSION['role_id'] > 1){echo '<li class="nav-item">
+                if (isset($_SESSION['role_id'])) {
+                    if ($_SESSION['role_id'] > 1) {
+                        echo '<li class="nav-item">
                     <a class="nav-link text-light" href="pages/admin.php">Panel Administracyjny</a>
-                </li>';}
+                </li>';
+                    }
 
                 }
                 ?>
