@@ -3,7 +3,7 @@ session_start();
 include("../database/connection.php");
 include("../scripts/functions.php");
 
-$GLOBALS["config"] = $config;
+$config = $GLOBALS["config"];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];

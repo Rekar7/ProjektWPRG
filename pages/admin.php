@@ -4,8 +4,45 @@ include("../database/connection.php");
 include("../scripts/functions.php");
 
 $config = $GLOBALS["config"];
-$conn = connect_to_db($config);
-checkLogin($conn);
+
+if (($_SERVER["REQUEST_METHOD"] == "POST") && (isset($_SESSION['user_id'])) && ($_SESSION['role_id']) > 2) {
+    $email = "";
+    $emailAdmin = "";
+    if (isset($_POST['email'])) {
+        $email = $_POST['email'];
+    }
+
+    if (isset($_POST['emailAdmin'])) {
+        $emailAdmin = $_POST['emailAdmin'];
+    }
+
+
+    if (!empty($emailAdminl)) {
+        try {
+            $conn = connect_to_db($config);
+            $query = "UPDATE users
+        SET role_id = 3
+        WHERE email = '" . $emailAdmin . "';";
+            mysqli_query($conn, $query);
+            $conn->close();
+        } catch (Exception $e) {
+            echo "an error occured during query" . $e->getMessage();
+        }
+    }
+
+    if (!empty($email)) {
+        try {
+            $conn = connect_to_db($config);
+            $query = "DELETE FROM users WHERE email = '" . $email . "';";
+            mysqli_query($conn, $query);
+            $conn->close();
+        } catch (Exception $e) {
+            echo "an error occured during query" . $e->getMessage();
+        }
+    }
+
+}
+
 ?>
 
 <!doctype html>
@@ -67,6 +104,39 @@ checkLogin($conn);
 
 <!--   CONTENT    -->
 
+<div class="container-fluid text-light p-5" id="main-page">
+    <div class="row text-center p-1">
+        <h1>Usuwanie użytkowników</h1>
+    </div>
+    <div class="row text-center justify-content-center">
+        <form action="#" method="POST" class="was-validated text-center w-50 mt-5">
+
+
+            <!-- Name -->
+
+            <div class="col">
+                <label class="mt-3" for="name">email</label>
+                <input name="email" type="email" class="form-control" placeholder="Email">
+            </div>
+
+            <div class="row text-center p-1">
+                <h1>Nadaj admina</h1>
+            </div>
+
+            <div class="row text-center justify-content-center mt-5">
+
+                <!-- Name -->
+
+                <div class="col">
+                    <label class="mt-3" for="emailAdmin">email</label>
+                    <input name="emailAdmin" type="email" class="form-control" placeholder="Email">
+                </div>
+
+                <input type="submit" class="btn btn-lg btn-block btn-primary mt-5" value="Wyślij formularz"></input>
+
+        </form>
+    </div>
+</div>
 
 <!--   FOOTER    -->
 
