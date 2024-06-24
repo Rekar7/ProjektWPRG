@@ -3,7 +3,6 @@
 include("config.php");
 
 $config = $GLOBALS["config"];
-
 //funkcja do nawiązania połączenia z bazą danych
 function connect_to_db($config)
 {

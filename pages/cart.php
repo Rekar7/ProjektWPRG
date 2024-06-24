@@ -96,9 +96,11 @@ checkLogin($conn);
                 </thead>
                 <tbody>
                 <?php
+                $cartEmpty = true;
                 if (isset($_COOKIE['cart'])) {
                     $cart = json_decode($_COOKIE['cart'], true);
                     if (!empty($cart)) {
+                        $cartEmpty = false;
                         $conn = connect_to_db($config);
                         foreach ($cart as $product_name) {
                             $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
@@ -125,32 +127,14 @@ checkLogin($conn);
                 ?>
                 </tbody>
             </table>
+            <?php
+            if (!$cartEmpty) {
+                echo "<div class='row'><div class='col'></div><form action='buy.php' method='post'><input type='hidden' name='buy'><button type='submit' class='btn btn-success'>Kup</button></form></div></div>";
+            }
+            ?>
         </div>
     </div>
 </div>
-
-
-<?php
-//
-//if (isset($_COOKIE['cart'])) {
-//    $cart = $_COOKIE['cart'];
-//    $conn = connect_to_db($config);
-//    $products = (object) array();
-//    foreach ($cart as $product) {
-//        $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
-//                FROM products p
-//                JOIN categories c ON p.category_id = c.category_id
-//                WHERE p.product_name = '" . $product . "';";
-//        $result = loadProducts($conn, $query);
-//        if ($result) {
-//            $products = array_merge($products, $result);
-//        }
-//    }
-//    $conn->close();
-//
-//}
-?>
-
 
 <!--   FOOTER    -->
 

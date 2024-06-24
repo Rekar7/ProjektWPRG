@@ -1,9 +1,9 @@
 <?php
 //$config = array(
-//    'server' => 'szuflandia.pjwstk.edu.pl',
-//    'database' => 's30401',
-//    'login' => 's30401',
-//    'password' => 'Woj.Binc'
+//    'server' => "szuflandia.pjwstk.edu.pl",
+//    'login' => "s30401",
+//    'password' => "Woj.Binc",
+//    'database' => "s30401",
 //);
 $config = array(
     'server' => 'localhost',
@@ -11,4 +11,6 @@ $config = array(
     'login' => 'root',
     'password' => '',
 );
+
+$GLOBALS['config'] = $config;
 ?>

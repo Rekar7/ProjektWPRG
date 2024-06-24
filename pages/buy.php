@@ -6,6 +6,52 @@ include("../scripts/functions.php");
 $config = $GLOBALS["config"];
 $conn = connect_to_db($config);
 checkLogin($conn);
+
+$canBuy = false;
+if (isset($_COOKIE['cart']) && isset($_SESSION['user_id'])) {
+    $canBuy = true;
+    $cart = json_decode($_COOKIE['cart'], true);   //cookie odnawia się za każdym razem jak się dodaje do koszyka
+    if (!is_array($cart)) {
+        $cart = []; // Jeśli json_decode zwróci coś innego niż tablica, ustaw $cart jako pustą tablicę
+    }
+
+    $products = [];
+
+
+    foreach ($cart as $product_name) {
+        $conn = connect_to_db($config);
+        $query = "
+                SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+                FROM products p
+                JOIN categories c ON p.category_id = c.category_id
+                WHERE p.product_name = '" . $product_name . "'";
+        $product = loadProducts($conn, $query);
+        $products = array_merge($products, $product);
+    }
+
+    $totalPrice = 0;
+    foreach ($products as $product) {
+        $totalPrice += $product->price;
+    }
+
+    $conn = connect_to_db($config);
+
+    $query = "INSERT INTO orders (user_id, order_date, total_price) VALUES (" . $_SESSION['user_id'] . ", NOW(), " . $totalPrice . ");";
+    mysqli_query($conn, $query);
+
+    $query = "SELECT * FROM orders ORDER BY order_id DESC LIMIT 1;";
+    $result = mysqli_query($conn, $query);
+    $order = mysqli_fetch_array($result);
+
+    foreach ($products as $product) {
+        $query = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES
+              (" . $order['order_id'] . ", '" . $product->productId . "', 1, " . $product->price . ");";
+        mysqli_query($conn, $query);
+    }
+
+    setcookie('cart', json_encode($cart), time() - 3600, "/");
+    $conn->close();
+}
 ?>
 
 <!doctype html>
@@ -46,10 +92,8 @@ checkLogin($conn);
                 <li class="nav-item">
                     <a class="nav-link text-light" href="../pages/cart.php">Koszyk</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-light" href="#">Profil</a>
-                </li>
                 <?php
+                showLoginProfile();
                 showLogout();
                 showAdminPanel();
                 ?>
@@ -64,51 +108,32 @@ checkLogin($conn);
 </nav>
 
 <!--   CONTENT    -->
+<div class="container-fluid justify-content-center m-auto">
+<?php
 
-<div class="container mt-5">
-    <div class="row justify-content-start mt-5">
-        Imię: <?php if(isset($_SESSION['name']))
-        {
-            echo $_SESSION['name'];
-        }?>
-    </div>
-    <div class="row justify-content-start mt-5">
-        Nazwisko: <?php if(isset($_SESSION['name']))
-        {
-            echo $_SESSION['name'];
-        }?>
-    </div>
-    <div class="row justify-content-start mt-5">
-        E-mail: <?php if(isset($_SESSION['email']))
-        {
-            echo $_SESSION['email'];
-        }?>
-    </div>
-    <div class="row justify-content-start mt-5">
-        Telefon: <?php if(isset($_SESSION['phone_number']))
-        {
-            echo $_SESSION['phone_number'];
-        }?>
-    </div>
-    <div class="row justify-content-start mt-5">
-        Adres: <?php if(isset($_SESSION['address']))
-        {
-            echo $_SESSION['address'];
-        }?>
-    </div>
-    <div class="row justify-content-start mt-5">
-        Rola: <?php if(isset($_SESSION['role_id']))
-        {
-            $conn = connect_to_db($config);
-            $query="SELECT role_name FROM roles WHERE role_id = {$_SESSION['role_id']}";
-            $result = mysqli_query($conn, $query);
-            $result = $result->fetch_assoc();
-            echo $result["role_name"];
-            $conn->close();
-        }?>
-    </div>
+if (!$canBuy) {
+    echo "<div class='container-fluid bg-black'>Musisz się zalogować i mieć coś w koszyku, żeby móc dokonać zakupu!</div>";
+} else {
+    $conn = connect_to_db($config);
+    $query = "
+                SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+                FROM products p
+                JOIN order_items oi on p.product_id = oi.product_id
+                JOIN categories c ON p.category_id = c.category_id
+                WHERE oi.order_id=" . $order['order_id'] . ";";
+    $products = loadProducts($conn, $query);
+
+    echo "<div class='grid-container bg-success w-75'>";
+
+    foreach ($products as $product) {
+        $product->showProduct();
+    }
+    echo "</div>";
+}
+
+?>
 </div>
-
+</div>
 <!--   FOOTER    -->
 
 <footer class="mt-5">
