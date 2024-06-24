@@ -52,7 +52,7 @@ checkLogin($conn);
                 ?>
             </ul>
             <form class="d-flex" role="search" action="../pages/shop.php" method="post">
-                <input class="form-control me-2 text-dark" type="search" placeholder="Szukaj przedmiotu"
+                <input class="form-control me-2 text-dark" name="search" type="search" placeholder="Szukaj przedmiotu"
                        aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Szukaj</button>
             </form>
@@ -68,10 +68,11 @@ checkLogin($conn);
 
         <div class="flex-container-vertical sidebars me-2 bg-dark-subtle">
 
+
             <?php
 
             foreach (Category::cases() as $category) {
-                echo '<div class="border border-dark border-3 p-1 text-dark">'. $category->value .'</div>';
+                echo '<div class="border border-dark border-3 p-1 text-dark"><form action="../pages/shop.php" method="get"><input type="hidden" name="category" value="' . $category->value . '"><button type="submit">  ' . $category->value . '</button></form></div>';
             }
 
             ?>
@@ -79,18 +80,73 @@ checkLogin($conn);
         <div class="grid-container bg-success w-75">
             <?php
 
-            $products = (object) array();
+            $products = (object)array();
             $conn = connect_to_db($config);
             $products = loadProducts($conn);
 
-            foreach ($products as $product) {
-                $product->showProduct();
+            if (isset($_GET["category"])) {
+                foreach ($products as $product) {
+                    if ($product->category == $_GET['category']) $product->showProduct();
+                }
+            } else {
+
+                if (isset($_GET['sort'])) {
+                    switch ($_GET['sort']) {
+                        case "priceDescending":
+                            usort($products, 'compareByPriceAscending');
+                            break;
+                        case "priceAscending":
+                            usort($products, 'compareByPriceDescending');
+                            break;
+                        case "nameDescending":
+                            usort($products, 'compareByNameAscending');
+                            $products = array_reverse($products);
+                            break;
+                        case "nameAscending":
+                            usort($products, 'compareByNameAscending');
+                            break;
+                        case "availability":
+                            usort($products, 'compareByAvailability');
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                foreach ($products as $product) {
+                    $product->showProduct();
+                }
             }
 
             ?>
         </div>
         <div class="flex-container-vertical sidebars ms-2 bg-dark-subtle">
             <div class="border border-dark border-3 p-1 text-dark"><H5>Sortowanie</H5></div>
+            <div class="border border-dark border-3 p-1 text-dark">
+                <form action="../pages/shop.php" method="get"><input type="hidden" name="sort" value="priceDescending">
+                    <button type="submit">Cena malejąca</button>
+                </form>
+            </div>
+            <div class="border border-dark border-3 p-1 text-dark">
+                <form action="../pages/shop.php" method="get"><input type="hidden" name="sort" value="priceAscending">
+                    <button type="submit">Cena rosnąca</button>
+                </form>
+            </div>
+            <div class="border border-dark border-3 p-1 text-dark">
+                <form action="../pages/shop.php" method="get"><input type="hidden" name="sort" value="nameDescending">
+                    <button type="submit">Nazwa malejąca</button>
+                </form>
+            </div>
+            <div class="border border-dark border-3 p-1 text-dark">
+                <form action="../pages/shop.php" method="get"><input type="hidden" name="sort" value="nameAscending">
+                    <button type="submit">Nazwa rosnąca</button>
+                </form>
+            </div>
+            <div class="border border-dark border-3 p-1 text-dark">
+                <form action="../pages/shop.php" method="get"><input type="hidden" name="sort" value="availability">
+                    <button type="submit">dostępność</button>
+                </form>
+            </div>
         </div>
 
     </div>
@@ -107,19 +163,19 @@ checkLogin($conn);
     </nav>
 </div>
 -->
-<!--   FOOTER    -->
+    <!--   FOOTER    -->
 
-<footer class="mt-5">
+    <footer class="mt-5">
 
-    <div class="row text-start ms-3 pt-5">
-        Meblex <br>
-        Sianowskie Centrum Mebli <br>
-        Koszalińska 2, 76-100 Sianów <br>
-        +48 923 567 123
-    </div>
+        <div class="row text-start ms-3 pt-5">
+            Meblex <br>
+            Sianowskie Centrum Mebli <br>
+            Koszalińska 2, 76-100 Sianów <br>
+            +48 923 567 123
+        </div>
 
-</footer>
+    </footer>
 
-<script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
+    <script src="../bootstrap-5.3.3-dist/js/bootstrap.bundle.js"></script>
 </body>
 </html>

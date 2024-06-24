@@ -81,7 +81,8 @@ class Product
 
     public function showProduct()
     {
-        echo "<div class='shopItem justify-content-center text-center mt-2'><img src='../assets/" . $this->image . "'><br>" . $this->productName . "<br>cena: " . $this->price . "zł</div>";
+        echo "<div class='shopItem justify-content-center text-center mt-2'><img src='../assets/" . $this->image . "'>
+<br>" . $this->productName . "<br>cena: " . $this->price . "zł<br>ilość: ".$this->stockQuantity."</div>";
     }
 
 }
@@ -110,5 +111,25 @@ function loadProducts($conn)
     return $products;
 }
 
+
+function compareByPriceAscending($a, $b)
+{
+    // Replace 'fieldName' with the actual field you want to sort by
+    return $a->price < $b->price;
+}
+
+function compareByPriceDescending($a, $b)
+{
+    return $a->price > $b->price;
+}
+
+function compareByNameAscending($a, $b)
+{
+    return $a->productName <=> $b->productName;
+}
+function compareByAvailability($a, $b)
+{
+    return $a->stockQuantity < $b->stockQuantity;
+}
 
 ?>
