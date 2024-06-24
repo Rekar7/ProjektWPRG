@@ -1,4 +1,21 @@
 <?php
+if (isset($_POST["product"])) {
+    if (isset($_COOKIE['cart'])) {
+        $cart = json_decode($_COOKIE['cart'], true);   //cookie odnawia się za każdym razem jak się dodaje do koszyka
+        if (!is_array($cart)) {
+            $cart = []; // Jeśli json_decode zwróci coś innego niż tablica, ustaw $cart jako pustą tablicę
+        }
+    } else {
+        $cart = [];  //cookie będzie trwał 5 dni
+    }
+    array_push($cart, $_POST["product"]);
+    setcookie("cart", json_encode($cart), time() + (86400 * 5), "/"); // 5-day cookie
+
+    // Redirect to avoid resubmission
+    header("Location: cart.php");
+    exit;
+}
+
 session_start();
 include("../database/connection.php");
 include("../scripts/functions.php");
@@ -6,22 +23,6 @@ include("../scripts/functions.php");
 $config = $GLOBALS["config"];
 $conn = connect_to_db($config);
 checkLogin($conn);
-
-var_dump($_POST);
-
-if (isset($_POST["product"])) {
-    if (isset($_COOKIE['cart'])) {
-        $cart = json_decode($_COOKIE['cart']);
-        array_push($cart, $_POST["product"]);
-        setcookie("cart", json_encode($cart), time() + (86400 * 30), "/");   //cookie odnawia się za każdym razem jak się dodaje do koszyka
-    } else {
-        $cart = array($_POST["product"]);
-        setcookie("cart", json_encode($cart), time() + (86400 * 5), "/");  //cookie będzie trwał 5 dni
-    }
-
-}
-echo "cook";
-var_dump($_COOKIE['cart']);
 ?>
 
 <!doctype html>
@@ -79,25 +80,75 @@ var_dump($_COOKIE['cart']);
 
 <!--   CONTENT    -->
 
+
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col">
+            <h2>Koszyk</h2>
+            <table class="table table-dark table-striped">
+                <thead>
+                <tr>
+                    <th>Nazwa produktu</th>
+                    <th>Cena</th>
+                    <th>Ilość</th>
+                    <th>Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php
+                if (isset($_COOKIE['cart'])) {
+                    $cart = json_decode($_COOKIE['cart'], true);
+                    if (!empty($cart)) {
+                        $conn = connect_to_db($config);
+                        foreach ($cart as $product_name) {
+                            $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+                                      FROM products p
+                                      JOIN categories c ON p.category_id = c.category_id
+                                      WHERE p.product_name = '" . $product_name . "'";
+                            $result = mysqli_query($conn, $query);
+                            if ($row = mysqli_fetch_assoc($result)) {
+                                echo "<tr>
+                                        <td>{$row['product_name']}</td>
+                                        <td>{$row['price']} zł</td>
+                                        <td>1</td>
+                                        <td><form action='remove_from_cart.php' method='post'><input type='hidden' name='product' value='{$row['product_name']}'><button type='submit' class='btn btn-danger'>Usuń</button></form></td>
+                                      </tr>";
+                            }
+                        }
+                        $conn->close();
+                    } else {
+                        echo "<tr><td colspan='4'>Koszyk jest pusty.</td></tr>";
+                    }
+                } else {
+                    echo "<tr><td colspan='4'>Koszyk jest pusty.</td></tr>";
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
 <?php
-
-if (isset($_COOKIE['cart'])) {
-    $cart = json_decode($_COOKIE['cart'], true);
-    $conn = connect_to_db($config);
-    $products = (object) array();
-    foreach ($cart as $product) {
-        $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
-                FROM products p
-                JOIN categories c ON p.category_id = c.category_id
-                WHERE p.product_name = '" . $product . "';";
-        $result = loadProducts($conn, $query);
-        if ($result) {
-            $products = array_merge($products, $result);
-        }
-    }
-    $conn->close();
-
-}
+//
+//if (isset($_COOKIE['cart'])) {
+//    $cart = $_COOKIE['cart'];
+//    $conn = connect_to_db($config);
+//    $products = (object) array();
+//    foreach ($cart as $product) {
+//        $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
+//                FROM products p
+//                JOIN categories c ON p.category_id = c.category_id
+//                WHERE p.product_name = '" . $product . "';";
+//        $result = loadProducts($conn, $query);
+//        if ($result) {
+//            $products = array_merge($products, $result);
+//        }
+//    }
+//    $conn->close();
+//
+//}
 ?>
 
 

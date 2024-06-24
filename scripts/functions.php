@@ -119,9 +119,9 @@ function addToCart()
 {
     $product = getProduct();
     if ($product->stockQuantity > 0) {
-        echo "<div class='col me-5 pe-5''><form action='../pages/cart.php' method='post'><input type='hidden' name='product' value='" . $_GET['product'] . "'><button class='btn btn-outline-light' type='submit'>Dodaj do koszyka</button></form></div>";
+        echo "<div class='col me-5 pe-5''><form action='../pages/cart.php' method='post'><input type='hidden' name='product' value='" . $product->productName . "'><button class='btn btn-outline-light' type='submit'>Dodaj do koszyka</button></form></div>";
     } else {
-        echo "<div class='col me-5 pe-5''><form action='#' method='post'><input type='hidden' name='product' value='" . $_GET['product'] . "'><button class='btn btn-outline-light disabled'>Dodaj do koszyka</button></form></div>";
+        echo "<div class='col me-5 pe-5''><button class='btn btn-outline-light disabled'>Dodaj do koszyka</button></div>";
     }
 }
 
