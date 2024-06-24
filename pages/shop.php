@@ -6,6 +6,7 @@ include("../scripts/functions.php");
 $config = $GLOBALS["config"];
 $conn = connect_to_db($config);
 checkLogin($conn);
+deleteProduct();
 ?>
 
 <!doctype html>
@@ -68,8 +69,7 @@ checkLogin($conn);
     <div class="flex-container">
 
         <div class="flex-container-vertical sidebars me-2 bg-dark-subtle">
-
-
+            <div class="border border-dark border-3 p-1 text-dark"><H5>Kategorie</H5></div>
             <?php
 
             foreach (Category::cases() as $category) {

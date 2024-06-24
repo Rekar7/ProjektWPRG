@@ -62,10 +62,18 @@ checkLogin($conn);
 </nav>
 
 <!--   CONTENT    -->
-<div class="flex-container mt-5">
-    <?php
-    showProductDetail();
-    ?>
+<div class="container-fluid mt-5">
+    <div class="row justify-content-start text-start">
+        <?php
+        showProductDetail();
+        ?>
+    </div>
+    <div class="row justify-content-end text-end mt-5">
+        <?php
+        //deleteProductButton();
+        addToCart();
+        ?>
+    </div>
 </div>
 
 <!--   FOOTER    -->

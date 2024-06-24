@@ -20,6 +20,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($userData['password'] === $password) {
                     $_SESSION['user_id'] = $userData['user_id'];
                     $_SESSION['role_id'] = $userData['role_id'];
+                    $_SESSION['name'] = $userData['name'];
+                    $_SESSION['last_name'] = $userData['last_name'];
+                    $_SESSION['phone_number'] = $userData['phone_number'];
+                    $_SESSION['address'] = $userData['address'];
+                    $_SESSION['email'] = $userData['email'];
                     $conn->close();
                     header("Location: ../index.php");
                     die;
@@ -29,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->close();
         die;
     } else {
-        echo "All fields are required";
+        //echo "All fields are required";
     }
 }
 ?>

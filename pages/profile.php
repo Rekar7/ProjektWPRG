@@ -65,6 +65,49 @@ checkLogin($conn);
 
 <!--   CONTENT    -->
 
+<div class="container mt-5">
+    <div class="row justify-content-start mt-5">
+        Imię: <?php if(isset($_SESSION['name']))
+        {
+            echo $_SESSION['name'];
+        }?>
+    </div>
+    <div class="row justify-content-start mt-5">
+        Nazwisko: <?php if(isset($_SESSION['name']))
+        {
+            echo $_SESSION['name'];
+        }?>
+    </div>
+    <div class="row justify-content-start mt-5">
+        E-mail: <?php if(isset($_SESSION['email']))
+        {
+            echo $_SESSION['email'];
+        }?>
+    </div>
+    <div class="row justify-content-start mt-5">
+        Telefon: <?php if(isset($_SESSION['phone_number']))
+        {
+            echo $_SESSION['phone_number'];
+        }?>
+    </div>
+    <div class="row justify-content-start mt-5">
+        Adres: <?php if(isset($_SESSION['address']))
+        {
+            echo $_SESSION['address'];
+        }?>
+    </div>
+    <div class="row justify-content-start mt-5">
+        Rola: <?php if(isset($_SESSION['role_id']))
+        {
+            $conn = connect_to_db($config);
+            $query="SELECT role_name FROM roles WHERE role_id = {$_SESSION['role_id']}";
+            $result = $conn->query($query);
+            $result = $result->fetch_assoc();
+            echo $result["role_name"];
+            $conn->close();
+        }?>
+    </div>
+</div>
 
 <!--   FOOTER    -->
 

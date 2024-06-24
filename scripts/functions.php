@@ -95,27 +95,62 @@ class Product
     }
 
 
-};
+}
 
-function showProductDetail()
+;
+
+function getProduct()
 {
     $config = $GLOBALS["config"];
     $conn = connect_to_db($config);
     $query = "SELECT p.product_id, p.product_name, p.price, p.stock_quantity, c.category_name, p.image
                 FROM products p
                 JOIN categories c ON p.category_id = c.category_id
-                WHERE p.product_name = '".$_GET['product']."';";
+                WHERE p.product_name = '" . $_GET['product'] . "';";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
     $product = new Product($row['product_id'], $row['product_name'], $row['price'], $row['stock_quantity'], $row['category_name'], $row['image']);
     $conn->close();
 
-    echo "<div class='col'><img class='border border-dark border-3' id='productImage' src='../assets/" . $product->image . "'></div>";
-    echo "<div class='col'>
-            <h2>Nazwa: " . $row['product_name'] . "</h2><br>
-            <h2>Cena: " . $row['price'] . "</h2><br>
-            <h2>Ilość: " . $row['stock_quantity'] . "</h2><br>
-            <h2>Kategoria: " . $row['category_name'] . "</h2><br>
+    return $product;
+}
+
+function addToCart()
+{
+    $product = getProduct();
+    if ($product->stockQuantity > 0) {
+        echo "<div class='col me-5 pe-5''><form action='../pages/cart.php' method='post'><input type='hidden' name='product' value='" . $_GET['product'] . "'><button class='btn btn-outline-light' type='submit'>Dodaj do koszyka</button></form></div>";
+    } else {
+        echo "<div class='col me-5 pe-5''><form action='#' method='post'><input type='hidden' name='product' value='" . $_GET['product'] . "'><button class='btn btn-outline-light disabled'>Dodaj do koszyka</button></form></div>";
+    }
+}
+
+function deleteProduct()
+{
+    if (isset($_GET['product']) && isset($_GET['delete']) && $_GET['delete'] == 'true') {
+        $config = $GLOBALS["config"];
+        $conn = connect_to_db($config);
+        $query = "DELETE FROM products WHERE product_id='" . $_GET['product'] . "';";
+        mysqli_query($conn, $query);
+    }
+}
+
+function deleteProductButton()
+{
+    if (isset($_SESSION['user_id']) && $_SESSION['role_id'] > 2) {
+        echo "<div class='col me-5 pe-5 ms-5 ps-5''><form action='../pages/shop.php' method='post'><input type='hidden' name='product' value='" . $_GET['product'] . "'><input type='hidden' name='delete' value='true'><button class='btn btn-outline-light btn-danger' type='submit'>Usun produkt ze sklepu</button></form></div>";
+    }
+}
+
+function showProductDetail()
+{
+    $product = getProduct();
+    echo "<div class='col ms-5 me-5 pe-5'><img class='border border-dark border-3' id='productImage' src='../assets/" . $product->image . "'></div>";
+    echo "<div class='col ms-5 ps-5'>
+            <h2>Nazwa: " . $product->productName . "</h2><br>
+            <h2>Cena: " . $product->price . "</h2><br>
+            <h2>Ilość: " . $product->stockQuantity . "</h2><br>
+            <h2>Kategoria: " . $product->category . "</h2><br>
 </div>";
 }
 
